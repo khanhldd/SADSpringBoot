@@ -1,0 +1,12 @@
+package com.flywithmet7;
+
+@SpringBootApplication
+@EnableEurekaClient        // It acts as a eureka client
+@EnableZuulProxy        // Enable Zuul
+public class VNAGatewatApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(VNAGatewatApplication.class, args);
+    }
+
+}

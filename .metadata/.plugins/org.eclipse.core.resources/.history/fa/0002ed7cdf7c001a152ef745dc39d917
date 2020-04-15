@@ -1,0 +1,68 @@
+package com.flywithmet7.controller;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.flywithmet7.entity.Ticket;
+
+@RestController
+@RequestMapping("/")
+public class TicketController {
+	@Autowired
+	private Environment env;
+
+	@RequestMapping("/")
+	public String home() {
+		// This is useful for debugging
+		// When having multiple instance of image service running at different ports.
+		// We load balance among them, and display which instance received the request.
+		return "Hello from Ticket Service running at port: " + env.getProperty("local.server.port");
+	}
+		
+	@RequestMapping("/tickets")
+	public List<Ticket> getTickets() {
+		List<Ticket> tickets = Arrays.asList(
+			new Ticket("VJA", 1, "A", "HCM", "DN", "May", "2A", "1", "2", "3"),
+			new Ticket("VJA", 1, "A", "HCM", "HN", "May", "2A", "1", "2", "3"),
+			new Ticket("VJA", 1, "A", "HCM", "HN", "Sep", "2A", "1", "2", "3"));
+		return tickets;
+	}
+	
+	@RequestMapping("/tickets/{date}/{from}/{to}/{adult}/{children}/{baby}")
+	public List<Ticket> getTickets(@PathVariable final String date, 
+			                  @PathVariable final String from, 
+			                  @PathVariable final String to, 
+			                  @PathVariable final String adult, 
+			                  @PathVariable final String children, 
+			                  @PathVariable final String baby) {
+								
+		List<Ticket> tickets = Arrays.asList(
+				new Ticket("VJA", 1, "A", "HCM", "HN", "May", "2A", 1, 2, 3),
+				new Ticket("VJA", 1, "A", "HCM", "HN", "May", "2A", 1, 2, 3),
+				new Ticket("VJA", 1, "A", "HCM", "HN", "May", "2A", 1, 2, 3));
+		List<Ticket> tc = new ArrayList<Ticket>();
+		try {
+			for(Ticket subTicket : tickets) {
+				if(subTicket.getDate().equalsIgnoreCase(date) == true &&
+						subTicket.getFrom().equalsIgnoreCase(from) == true &&
+						subTicket.getTo().equalsIgnoreCase(to) == true &&
+						subTicket.getAdult() == Integer.parseInt(adult) &&
+						subTicket.getChildren() == Integer.parseInt(children)) {
+					tc.add(subTicket);
+				}
+						}
+			
+		} catch (Exception e) {
+			tc.add(null);
+		}
+		return tc;
+}
+}
